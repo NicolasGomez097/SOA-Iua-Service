@@ -12,56 +12,52 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.iua.soa.business.ITransaccionBusiness;
-import com.iua.soa.exeptions.BadRequestException;
+import com.iua.soa.business.ITarjetaBusiness;
 import com.iua.soa.exeptions.BusinessException;
 import com.iua.soa.exeptions.NotFoundException;
-import com.iua.soa.model.Transaccion;
+import com.iua.soa.model.Tarjeta;
 import com.iua.soa.utils.Constantes;
 
 @RestController
-@RequestMapping(Constantes.URL_TRANSACCION)
-public class TransaccionRestController {
+@RequestMapping(Constantes.URL_TARJETA)
+public class TarjetaRestController {
 	
 	@Autowired
-	private ITransaccionBusiness transaccionBusiness;
+	private ITarjetaBusiness tarjetaBusiness;
 	
 	@PostMapping("")
-	public ResponseEntity<String> crearTransaccion(@RequestBody Transaccion transaccion){
+	public ResponseEntity<String> crearTarjeta(@RequestBody Tarjeta tarjeta){
 		
 		try {
-			transaccionBusiness.crearTransaccion(transaccion);
+			tarjetaBusiness.crearTarjeta(tarjeta);
 			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.set("id_transaccion", transaccion.getId().toString());
+			responseHeaders.set("id_transaccion", tarjeta.getId().toString());
 			return new ResponseEntity<String>(responseHeaders,HttpStatus.CREATED);
 		}catch (BusinessException e) {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}catch (BadRequestException e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
-		
 	}
 	
 	@GetMapping("")
-	public ResponseEntity<List<Transaccion>> getTransacciones(){
+	public ResponseEntity<List<Tarjeta>> getTransacciones(){
 		try {			
-			return new ResponseEntity<List<Transaccion>>(transaccionBusiness.getTranascciones(),HttpStatus.OK);
+			return new ResponseEntity<List<Tarjeta>>(tarjetaBusiness.getTarjetas(),HttpStatus.OK);
 		}catch (BusinessException e) {
-			return new ResponseEntity<List<Transaccion>>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<List<Tarjeta>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Transaccion> getTransaccion(@PathVariable("id") int idTransaccion) {
+	public ResponseEntity<Tarjeta> getTransaccion(@PathVariable("id") int idTarjeta) {
 		try {
-			Transaccion t = transaccionBusiness.getTranasccion(idTransaccion);
-			return new ResponseEntity<Transaccion>(t,HttpStatus.OK);
+			Tarjeta t = tarjetaBusiness.getTarjeta(idTarjeta);
+			return new ResponseEntity<Tarjeta>(t,HttpStatus.OK);
 		} catch (BusinessException e) {
-			return new ResponseEntity<Transaccion>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Tarjeta>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (NotFoundException e) {
-			return new ResponseEntity<Transaccion>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Tarjeta>(HttpStatus.NOT_FOUND);
 		}
 	}
 }
