@@ -27,12 +27,12 @@ public class UsuarioRestController {
 	private IUsuarioBusiness usuarioBusiness;
 	
 	@PostMapping("")
-	public ResponseEntity<String> crearTransaccion(@RequestBody Usuario usuario){
+	public ResponseEntity<String> crearUsuario(@RequestBody Usuario usuario){
 		
 		try {
 			usuarioBusiness.crearUsuario(usuario);
 			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.set("id_transaccion", usuario.getId().toString());
+			responseHeaders.set("id_usuario", usuario.getId().toString());
 			return new ResponseEntity<String>(responseHeaders,HttpStatus.CREATED);
 		}catch (BusinessException e) {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -42,7 +42,7 @@ public class UsuarioRestController {
 	}
 	
 	@GetMapping("")
-	public ResponseEntity<List<Usuario>> getTransacciones(){
+	public ResponseEntity<List<Usuario>> getUsuario(){
 		try {			
 			return new ResponseEntity<List<Usuario>>(usuarioBusiness.getUsuarios(),HttpStatus.OK);
 		}catch (BusinessException e) {
@@ -53,7 +53,7 @@ public class UsuarioRestController {
 	
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Usuario> getTransaccion(@PathVariable("id") int idUsuario) {
+	public ResponseEntity<Usuario> getUsuarioId(@PathVariable("id") int idUsuario) {
 		try {
 			Usuario t = usuarioBusiness.getUsuario(idUsuario);
 			return new ResponseEntity<Usuario>(t,HttpStatus.OK);

@@ -20,10 +20,10 @@ public class Tarjeta {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@Column(nullable = false, unique = true)
+	private Integer numero;
 	@Column(nullable = false)
-	private int numero;
-	@Column(nullable = false)
-	private int codigoSeguridad;
+	private Integer codigoSeguridad;
 	@Column(nullable = false)
 	private String fechaVencimiento;
 	
@@ -42,19 +42,19 @@ public class Tarjeta {
 		this.id = id;
 	}
 
-	public int getNumero() {
+	public Integer getNumero() {
 		return numero;
 	}
 
-	public void setNumero(int numero) {
+	public void setNumero(Integer numero) {
 		this.numero = numero;
 	}
 
-	public int getCodigoSeguridad() {
+	public Integer getCodigoSeguridad() {
 		return codigoSeguridad;
 	}
 
-	public void setCodigoSeguridad(int codigoSeguridad) {
+	public void setCodigoSeguridad(Integer codigoSeguridad) {
 		this.codigoSeguridad = codigoSeguridad;
 	}
 

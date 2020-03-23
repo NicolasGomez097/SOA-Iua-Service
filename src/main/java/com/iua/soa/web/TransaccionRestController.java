@@ -30,7 +30,7 @@ public class TransaccionRestController {
 	public ResponseEntity<String> crearTransaccion(@RequestBody Transaccion transaccion){
 		
 		try {
-			transaccionBusiness.crearTransaccion(transaccion);
+			transaccionBusiness.crearTransaccion(transaccion);				
 			HttpHeaders responseHeaders = new HttpHeaders();
 			responseHeaders.set("id_transaccion", transaccion.getId().toString());
 			return new ResponseEntity<String>(responseHeaders,HttpStatus.CREATED);

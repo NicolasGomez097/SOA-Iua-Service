@@ -28,7 +28,7 @@ public class HttpUtils {
 	}
 	
 	public static String postMethod(String url_request, String body) throws Exception{
-		 URL url = new URL(url_request);
+		URL url = new URL(url_request);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Accept", "application/json");

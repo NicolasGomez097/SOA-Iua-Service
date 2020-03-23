@@ -17,7 +17,7 @@ public class Transaccion {
 	private Integer id;	
 	
 	@Column(nullable = false)
-	private float monto;	
+	private Float monto;	
 	@Column(nullable = false)
 	private String fecha;
 	@Column(nullable = false)
@@ -43,11 +43,11 @@ public class Transaccion {
 		this.id = id;
 	}
 
-	public float getMonto() {
+	public Float getMonto() {
 		return monto;
 	}
 
-	public void setMonto(float monto) {
+	public void setMonto(Float monto) {
 		this.monto = monto;
 	}
 

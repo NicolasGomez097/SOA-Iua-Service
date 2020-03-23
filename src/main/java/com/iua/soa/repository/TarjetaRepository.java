@@ -10,4 +10,5 @@ import com.iua.soa.model.Tarjeta;
 @Repository
 public interface TarjetaRepository extends JpaRepository<Tarjeta, Integer>{
 	Optional<Tarjeta> findById(int id);
+	Optional<Tarjeta> findByNumero(int numero);
 }

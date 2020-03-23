@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iua.soa.business.ITarjetaBusiness;
+import com.iua.soa.exeptions.BadRequestException;
 import com.iua.soa.exeptions.BusinessException;
 import com.iua.soa.exeptions.NotFoundException;
 import com.iua.soa.model.Tarjeta;
@@ -33,13 +34,15 @@ public class TarjetaRestController {
 			HttpHeaders responseHeaders = new HttpHeaders();
 			responseHeaders.set("id_transaccion", tarjeta.getId().toString());
 			return new ResponseEntity<String>(responseHeaders,HttpStatus.CREATED);
-		}catch (BusinessException e) {
+		} catch (BusinessException e) {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (BadRequestException e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@GetMapping("")
-	public ResponseEntity<List<Tarjeta>> getTransacciones(){
+	public ResponseEntity<List<Tarjeta>> getTarjeta(){
 		try {			
 			return new ResponseEntity<List<Tarjeta>>(tarjetaBusiness.getTarjetas(),HttpStatus.OK);
 		}catch (BusinessException e) {
@@ -50,9 +53,21 @@ public class TarjetaRestController {
 	
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Tarjeta> getTransaccion(@PathVariable("id") int idTarjeta) {
+	public ResponseEntity<Tarjeta> getTarjeta(@PathVariable("id") int idTarjeta) {
 		try {
 			Tarjeta t = tarjetaBusiness.getTarjeta(idTarjeta);
+			return new ResponseEntity<Tarjeta>(t,HttpStatus.OK);
+		} catch (BusinessException e) {
+			return new ResponseEntity<Tarjeta>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<Tarjeta>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@GetMapping(value = "/numero/{num}")
+	public ResponseEntity<Tarjeta> getTarjetaByNumero(@PathVariable("num") int numeroTarjeta) {
+		try {
+			Tarjeta t = tarjetaBusiness.getTarjetaByNumero(numeroTarjeta);
 			return new ResponseEntity<Tarjeta>(t,HttpStatus.OK);
 		} catch (BusinessException e) {
 			return new ResponseEntity<Tarjeta>(HttpStatus.INTERNAL_SERVER_ERROR);
