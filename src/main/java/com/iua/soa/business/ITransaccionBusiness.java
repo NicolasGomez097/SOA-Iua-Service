@@ -8,7 +8,7 @@ import com.iua.soa.exeptions.NotFoundException;
 import com.iua.soa.model.Transaccion;	
 
 public interface ITransaccionBusiness {
-	public boolean crearTransaccion(Transaccion transaccion) throws BusinessException,BadRequestException;
+	public Transaccion crearTransaccion(Transaccion transaccion) throws BusinessException,BadRequestException;
 	public Transaccion getTranasccion(int id) throws BusinessException,NotFoundException;
 	public List<Transaccion> getTranascciones() throws BusinessException;
 }

@@ -30,13 +30,15 @@ public class TransaccionRestController {
 	public ResponseEntity<String> crearTransaccion(@RequestBody Transaccion transaccion){
 		
 		try {
-			transaccionBusiness.crearTransaccion(transaccion);				
+			transaccionBusiness.crearTransaccion(transaccion);	
 			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.set("id_transaccion", transaccion.getId().toString());
-			return new ResponseEntity<String>(responseHeaders,HttpStatus.CREATED);
+			responseHeaders.add("estado_transaccion", transaccion.getEstado().toString());
+			return new ResponseEntity<String>(responseHeaders, HttpStatus.CREATED);
 		}catch (BusinessException e) {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}catch (BadRequestException e) {
+			HttpHeaders responseHeaders = new HttpHeaders();
+			responseHeaders.add("error", e.getMessage());
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 		

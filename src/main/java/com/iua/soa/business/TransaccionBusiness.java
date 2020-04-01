@@ -27,7 +27,7 @@ public class TransaccionBusiness implements ITransaccionBusiness{
 	private TarjetaRepository repoTarjeta;
 
 	@Override
-	public boolean crearTransaccion(Transaccion transaccion) throws BusinessException,BadRequestException {
+	public Transaccion crearTransaccion(Transaccion transaccion) throws BusinessException,BadRequestException {
 		validateTransaccion(transaccion);
 		try{
 			
@@ -44,7 +44,7 @@ public class TransaccionBusiness implements ITransaccionBusiness{
 		}catch (Exception e) {
 			throw new BusinessException();
 		}
-		return true;			
+		return transaccion;			
 	}
 
 
