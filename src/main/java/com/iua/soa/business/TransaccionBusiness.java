@@ -7,11 +7,13 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
 import com.iua.soa.exeptions.BadRequestException;
 import com.iua.soa.exeptions.BusinessException;
 import com.iua.soa.exeptions.NotFoundException;
 import com.iua.soa.model.Tarjeta;
 import com.iua.soa.model.Transaccion;
+import com.iua.soa.model.dto.ValidarTarjetaDTO;
 import com.iua.soa.repository.TarjetaRepository;
 import com.iua.soa.repository.TransaccionRepository;
 import com.iua.soa.utils.DateUtil;
@@ -42,6 +44,9 @@ public class TransaccionBusiness implements ITransaccionBusiness{
 			
 			repo.save(transaccion);
 		}catch (Exception e) {
+			if(e instanceof BadRequestException)
+				throw e;
+			
 			throw new BusinessException();
 		}
 		return transaccion;			
@@ -71,26 +76,24 @@ public class TransaccionBusiness implements ITransaccionBusiness{
 	
 	private Transaccion.Estado getEstado(Integer tarjetaNumero, Float monto) {
 		String res_txt = "";
-		res_txt = String.format(
-				"{\"tarjeta\": {\"numero\": \"%d\" }, \"monto\": %.2f}",
-				tarjetaNumero,
-				monto);
+		HttpUtils.HTTPResponse response = null;
+		ValidarTarjetaDTO dto = new ValidarTarjetaDTO(tarjetaNumero, monto);
+		res_txt = new Gson().toJson(dto, ValidarTarjetaDTO.class);
+		
 		try {
-			res_txt = HttpUtils.postMethod(
+			response = HttpUtils.postMethod(
 					"https://iua-service.herokuapp.com/autorizar", 
 					res_txt);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if(res_txt == null)
+		if(response == null || response.getResponseCode() != 201) 
 			return null;
 		
-		JSONObject json = new JSONObject(res_txt);
+		
+		JSONObject json = new JSONObject(response.getBody());
 		String estado = json.getString("estado");
-		if(estado.equals(Transaccion.Estado.APROBADA.toString()))
-			return Transaccion.Estado.APROBADA;
-	
-		return Transaccion.Estado.RECHAZADA;
+		return Transaccion.Estado.valueOf(estado);
 	}
 	
 	private void validateTransaccion (Transaccion transaccion) throws BadRequestException {

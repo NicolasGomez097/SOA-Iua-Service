@@ -7,6 +7,25 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HttpUtils {
+	
+	public static class HTTPResponse {
+		private Integer responseCode;
+		private String body;
+		
+		public Integer getResponseCode() {
+			return responseCode;
+		}
+		public void setResponseCode(Integer responseCode) {
+			this.responseCode = responseCode;
+		}
+		public String getBody() {
+			return body;
+		}
+		public void setBody(String body) {
+			this.body = body;
+		}
+	}
+	
 	public static String getMethod(String url_request) throws Exception{
 		 URL url = new URL(url_request);
          HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -27,7 +46,7 @@ public class HttpUtils {
          return output;
 	}
 	
-	public static String postMethod(String url_request, String body) throws Exception{
+	public static HTTPResponse postMethod(String url_request, String body) throws Exception{
 		URL url = new URL(url_request);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
@@ -50,6 +69,10 @@ public class HttpUtils {
             output += aux;
         }
         conn.disconnect();
-        return output;
+        HTTPResponse response = new HTTPResponse();
+        response.setBody(output);
+        response.setResponseCode(conn.getResponseCode());
+        
+        return response;
 	}
 }
