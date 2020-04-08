@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iua.soa.business.IUsuarioBusiness;
@@ -53,10 +54,40 @@ public class UsuarioRestController {
 	
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Usuario> getUsuarioId(@PathVariable("id") int idUsuario) {
+	public ResponseEntity<Usuario> getUsuarioId(@PathVariable("id") int idUsuario,
+			@RequestParam(name = "op", defaultValue = "cache") String op) {
+		Usuario user = null;
 		try {
-			Usuario t = usuarioBusiness.getUsuario(idUsuario);
-			return new ResponseEntity<Usuario>(t,HttpStatus.OK);
+
+			if(op.equals("DB"))
+				user = usuarioBusiness.getUsuarioOnlyDB(idUsuario);
+			else if(op.equals("cache"))			
+				user = usuarioBusiness.getUsuario(idUsuario);
+			else 
+				return new ResponseEntity<Usuario>(HttpStatus.BAD_GATEWAY);
+			
+			return new ResponseEntity<Usuario>(user,HttpStatus.OK);
+		} catch (BusinessException e) {
+			return new ResponseEntity<Usuario>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<Usuario>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@GetMapping(value = "/dni/{dni}")
+	public ResponseEntity<Usuario> getUsuarioDni(@PathVariable("dni") int dni,
+			@RequestParam(name = "op", defaultValue = "cache") String op) {
+		Usuario user = null;
+		try {
+
+			if(op.equals("DB"))
+				user = usuarioBusiness.getUsuarioByDNIOnlyDB(dni);
+			else if(op.equals("cache"))			
+				user = usuarioBusiness.getUsuarioByDNI(dni);
+			else 
+				return new ResponseEntity<Usuario>(HttpStatus.BAD_GATEWAY);
+			
+			return new ResponseEntity<Usuario>(user,HttpStatus.OK);
 		} catch (BusinessException e) {
 			return new ResponseEntity<Usuario>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (NotFoundException e) {

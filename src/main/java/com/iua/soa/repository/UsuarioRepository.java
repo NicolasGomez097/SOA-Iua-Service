@@ -10,4 +10,5 @@ import com.iua.soa.model.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
 	Optional<Usuario> findById(int id);
+	Optional<Usuario> findByDni(int dni);
 }

@@ -9,6 +9,9 @@ import com.iua.soa.model.Usuario;
 
 public interface IUsuarioBusiness {
 	public boolean crearUsuario(Usuario usuario) throws BusinessException,BadRequestException;
-	public Usuario getUsuario(int id) throws BusinessException,NotFoundException;
+	public Usuario getUsuario(Integer id) throws BusinessException,NotFoundException;
+	public Usuario getUsuarioOnlyDB(Integer id) throws BusinessException,NotFoundException;
+	public Usuario getUsuarioByDNI(Integer dni) throws BusinessException,NotFoundException;
+	public Usuario getUsuarioByDNIOnlyDB(Integer dni) throws BusinessException,NotFoundException;
 	public List<Usuario> getUsuarios() throws BusinessException;
 }
